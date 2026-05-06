@@ -94,7 +94,7 @@ namespace Palworld {
             return false;
         }
 
-        void* postloadPtr = Palworld::GetVirtualFunctionFromVTable(vtable, 20);
+        void* postloadPtr = Palworld::GetVirtualFunctionFromVTable(vtable, 19);
         PS::Log<LogLevel::Verbose>(TEXT("Found UBlueprintGeneratedClass::PostLoad: {}\n"), postloadPtr);
 
         PostLoadCallback = [&](UClass* actorClass) {
@@ -116,7 +116,7 @@ namespace Palworld {
             return false;
         }
 
-        void* postInitCompsPtr = Palworld::GetVirtualFunctionFromVTable(vtable, 159);
+        void* postInitCompsPtr = Palworld::GetVirtualFunctionFromVTable(vtable, 169);
         PS::Log<LogLevel::Verbose>(TEXT("Found AActor::PostInitializeComponents: {}\n"), postInitCompsPtr);
 
         PostInitComponentsCallback = [&](AActor* self) {
@@ -197,7 +197,6 @@ namespace Palworld {
     void PalBlueprintModLoader::ModifyObject(RC::Unreal::UObject* object)
     {
         if (!object) return;
-
         auto objectClass = object->GetClassPrivate();
         auto& objectName = objectClass->GetNamePrivate();
 

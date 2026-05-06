@@ -37,7 +37,7 @@ void Palworld::UnrealOffsets::Initialize()
     // These are here so UE4SS can initialize a bit earlier to make sure PalSchema applies everything properly.
     // This also prevents having to ship a custom build of UE4SS.
     Unreal::Version::Major = 5;
-    Unreal::Version::Minor = 1;
+    Unreal::Version::Minor = 6;
 
     PS::Log<LogLevel::Verbose>(STR("Unreal Version set to {}.{}.\n"), Unreal::Version::Major, Unreal::Version::Minor);
 
@@ -48,8 +48,6 @@ void Palworld::UnrealOffsets::Initialize()
     auto FNameToStringAddress = Palworld::SignatureManager::GetSignature("FName::ToString_Wchar");
     FName::ToStringInternal.assign_address(FNameToStringAddress);
     PS::Log<LogLevel::Verbose>(STR("FName::ToString was assigned address of {}\n"), FNameToStringAddress);
-
-    ApplyMemberVariableLayout();
 
     UnrealInitializer::InitializeVersionedContainer();
     PS::Log<LogLevel::Verbose>(STR("Versioned Container initialized.\n"));

@@ -11,6 +11,7 @@
 #include "SDK/Classes/UCompositeDataTable.h"
 #include "SDK/Classes/UWorldPartitionRuntimeLevelStreamingCell.h"
 #include "SDK/Classes/PalUtility.h"
+#include "SDK/Helper/Memory.h"
 #include "SDK/PalSignatures.h"
 #include "SDK/StaticClassStorage.h"
 #include "SDK/UnrealOffsets.h"
@@ -162,17 +163,15 @@ namespace Palworld {
 
     void PalMainLoader::HookGameInstanceInit()
     {
-        auto PalGameInstanceClass = UECustom::UObjectGlobals::StaticFindObject<UClass*>(nullptr, nullptr, STR("/Script/Pal.PalGameInstance"));
-        if (!PalGameInstanceClass)
+        auto VTable = Palworld::GetVTablePtrByClassPath(TEXT("/Script/R5.R5GameInstance"));
+        if (!VTable)
         {
-            PS::Log<LogLevel::Error>(STR("Failed to find PalGameInstance. Cannot hook OnGameInstanceInit.\n"));
+            PS::Log<LogLevel::Error>(STR("Something went wrong with getting VTable pointer for R5GameInstance."));
             return;
         }
 
-        PS::Log<LogLevel::Verbose>(STR("Fetching default object for UPalGameInstance...\n"));
-        uintptr_t** PGIVTablePtr = *(uintptr_t***)PalGameInstanceClass->GetClassDefaultObject();
-        void* GameInstanceInitPtr = (void*)PGIVTablePtr[90];
-        PS::Log<LogLevel::Verbose>(STR("Found UPalGameInstance::Init: {}\n"), GameInstanceInitPtr);
+        void* GameInstanceInitPtr = Palworld::GetVirtualFunctionFromVTable(VTable, 90);
+        PS::Log<LogLevel::Verbose>(STR("Found UR5GameInstance::Init: {}\n"), GameInstanceInitPtr);
 
         GameInstanceInitCallbacks.push_back([&](UObject* Instance) {
             SetupGameInstanceInitLoaders();
@@ -190,38 +189,11 @@ namespace Palworld {
         auto enumLoader = std::make_unique<PalEnumLoader>();
         RegisterLoader(std::move(enumLoader));
 
-        auto monsterModLoader = std::make_unique<PalMonsterModLoader>();
-        RegisterLoader(std::move(monsterModLoader));
-
-        auto humanModLoader = std::make_unique<PalHumanModLoader>();
-        RegisterLoader(std::move(humanModLoader));
-
-        auto itemModLoader = std::make_unique<PalItemModLoader>();
-        RegisterLoader(std::move(itemModLoader));
-
-        auto skinModLoader = std::make_unique<PalSkinModLoader>();
-        RegisterLoader(std::move(skinModLoader));
-
-        auto appearanceModLoader = std::make_unique<PalAppearanceModLoader>();
-        RegisterLoader(std::move(appearanceModLoader));
-
-        auto buildingModLoader = std::make_unique<PalBuildingModLoader>();
-        RegisterLoader(std::move(buildingModLoader));
-
         auto rawTableModLoader = std::make_unique<PalRawTableLoader>();
         RegisterLoader(std::move(rawTableModLoader));
 
         auto blueprintModLoader = std::make_unique<PalBlueprintModLoader>();
         RegisterLoader(std::move(blueprintModLoader));
-
-        auto helpGuideLoader = std::make_unique<PalHelpGuideModLoader>();
-        RegisterLoader(std::move(helpGuideLoader));
-
-        auto spawnLoader = std::make_unique<PalSpawnLoader>();
-        RegisterLoader(std::move(spawnLoader));
-
-        auto languageModLoader = std::make_unique<PalLanguageModLoader>();
-        RegisterLoader(std::move(languageModLoader));
     }
 
     void PalMainLoader::SetupAutoReload()
