@@ -120,6 +120,10 @@ namespace Windrose {
         PS::Log<LogLevel::Verbose>(TEXT("Found AActor::PostInitializeComponents: {}\n"), postInitCompsPtr);
 
         PostInitComponentsCallback = [&](AActor* self) {
+            if (m_hasDeferredDataAssets)
+            {
+                ApplyDeferredDataAssets();
+            }
             ModifyObject(self);
         };
 
@@ -160,26 +164,122 @@ namespace Windrose {
     {
         for (auto& [assetName, assetData] : data.items())
         {
-            auto assetNameWide = RC::to_generic_string(assetName);
+            auto originalAssetPath = RC::to_generic_string(assetName);
+            auto assetNameWide = originalAssetPath;
             if (assetNameWide.starts_with(TEXT("/Game/")))
             {
-                static const std::wregex Pattern(LR"(^(.*/)([^/.]+)$)");
-                assetNameWide = std::regex_replace(assetNameWide, Pattern, TEXT("$1$2.$2_C"));
+                // Construct the full object path (Package.ObjectName) so StaticFindObject
+                // resolves the DataAsset export, not just the UPackage container.
+                // e.g. /Game/.../DA_BI_Foo  ->  /Game/.../DA_BI_Foo.DA_BI_Foo
+                static const std::wregex ShortNamePattern(LR"(^(.*/)([^/]+)$)");
+                auto objectPath = std::regex_replace(assetNameWide, ShortNamePattern, TEXT("$1$2.$2"));
 
-                auto softObjectPtr = UECustom::TSoftObjectPtr<UObject>(UECustom::FSoftObjectPath(assetNameWide));
+                // Probe the exact path first to distinguish DataAssets from Blueprint classes.
+                // DataAssets (DA_*, etc.) have no _C subobject; appending _C and calling
+                // LoadAsset_Blocking on a DataAsset path can crash. If the object is already
+                // in memory as a non-class (PrimaryDataAsset, etc.) we patch it directly here
+                // and skip the LoadAsset_Blocking path entirely.
+                auto existingObject = UECustom::UObjectGlobals::StaticFindObject(nullptr, nullptr, objectPath.c_str(), false);
+                if (existingObject && !existingObject->IsA<UClass>())
+                {
+                    auto objClass = existingObject->GetClassPrivate();
+                    auto objClassName = objClass ? objClass->GetNamePrivate().ToString() : TEXT("");
+
+                    if (objClassName.find(TEXT("Blueprint")) != RC::StringType::npos)
+                    {
+                        PS::Log<LogLevel::Warning>(TEXT("Skipped '{}': resolved to editor Blueprint object (class '{}'). "
+                            "Use the generated class path (...Foo.Foo_C) or short class key.\n"),
+                            originalAssetPath, objClassName);
+                        continue;
+                    }
+
+                    PS::Log<LogLevel::Normal>(TEXT("Patching DataAsset '{}' (class '{}')...\n"),
+                        existingObject->GetNamePrivate().ToString(), objClassName);
+                    existingObject->SetRootSet();
+                    ApplyData(assetData, existingObject);
+                    PS::Log<RC::LogLevel::Normal>(TEXT("Applied changes to DataAsset {}\n"),
+                        existingObject->GetNamePrivate().ToString());
+                    continue;
+                }
+
+                if (existingObject == nullptr)
+                {
+                    // DataAsset not in memory yet — force-loading it during R5GameInstance::Init
+                    // can crash. Queue it for deferred application once PostInitializeComponents
+                    // fires, by which point building DataAssets will be loaded.
+                    PS::Log<LogLevel::Normal>(TEXT("'{}' not in memory at GameInstanceInit, queuing for deferred patch.\n"),
+                        objectPath);
+                    m_deferredDataAssetMods[objectPath] = assetData;
+                    m_hasDeferredDataAssets = true;
+                    continue;
+                }
+
+                // existingObject is non-null and IsA<UClass> — standard Blueprint path.
+                static const std::wregex Pattern(LR"(^(.*/)([^/.]+)$)");
+                auto blueprintClassPath = std::regex_replace(assetNameWide, Pattern, TEXT("$1$2.$2_C"));
+
+                auto softObjectPtr = UECustom::TSoftObjectPtr<UObject>(UECustom::FSoftObjectPath(blueprintClassPath));
                 auto asset = UECustom::UKismetSystemLibrary::LoadAsset_Blocking(softObjectPtr);
                 if (!asset)
                 {
-                    throw std::runtime_error(RC::fmt("Failed to apply blueprint changes, asset '%S' was invalid", assetNameWide.c_str()));
+                    throw std::runtime_error(RC::fmt("Failed to apply blueprint changes, asset '%S' was invalid", originalAssetPath.c_str()));
+                }
+                if (!asset->IsA<UClass>())
+                {
+                    auto loadedAssetClass = asset->GetClassPrivate();
+                    auto loadedAssetClassName = loadedAssetClass ? loadedAssetClass->GetNamePrivate().ToString() : TEXT("<unknown>");
+                    PS::Log<LogLevel::Warning>(TEXT("Path '{}' resolved to non-class '{}' (class '{}'). Skipping.\n"),
+                        blueprintClassPath, asset->GetNamePrivate().ToString(), loadedAssetClassName);
+                    continue;
                 }
 
                 asset->SetRootSet();
+                auto loadedClass = static_cast<UClass*>(asset);
+                auto& defaultObject = loadedClass->GetClassDefaultObject();
+                auto* targetObject = defaultObject.Get();
 
-                auto& defaultObject = static_cast<UClass*>(asset)->GetClassDefaultObject();
-                ApplyData(assetData, defaultObject.Get());
-
-                PS::Log<RC::LogLevel::Normal>(TEXT("Applied changes to {}\n"), static_cast<UClass*>(asset)->GetNamePrivate().ToString());
+                ApplyData(assetData, targetObject);
+                PS::Log<RC::LogLevel::Normal>(TEXT("Applied changes to {}\n"), targetObject->GetNamePrivate().ToString());
             }
+        }
+    }
+
+    void WindroseBlueprintModLoader::ApplyDeferredDataAssets()
+    {
+        auto it = m_deferredDataAssetMods.begin();
+        while (it != m_deferredDataAssetMods.end())
+        {
+            auto& path = it->first;
+            auto obj = UECustom::UObjectGlobals::StaticFindObject(nullptr, nullptr, path.c_str(), false);
+            if (obj && !obj->IsA<UClass>())
+            {
+                auto objClass = obj->GetClassPrivate();
+                auto objClassName = objClass ? objClass->GetNamePrivate().ToString() : TEXT("");
+                PS::Log<LogLevel::Normal>(TEXT("Applying deferred patch to DataAsset '{}' (class '{}')...\n"),
+                    obj->GetNamePrivate().ToString(), objClassName);
+                obj->SetRootSet();
+                try
+                {
+                    ApplyData(it->second, obj);
+                    PS::Log<RC::LogLevel::Normal>(TEXT("Applied deferred changes to DataAsset {}\n"),
+                        obj->GetNamePrivate().ToString());
+                }
+                catch (const std::exception& e)
+                {
+                    PS::Log<RC::LogLevel::Error>(TEXT("Failed deferred patch for '{}': {}\n"),
+                        path, RC::to_generic_string(e.what()));
+                }
+                it = m_deferredDataAssetMods.erase(it);
+            }
+            else
+            {
+                ++it;
+            }
+        }
+
+        if (m_deferredDataAssetMods.empty())
+        {
+            m_hasDeferredDataAssets = false;
         }
     }
 
@@ -227,7 +327,17 @@ namespace Windrose {
 
     void WindroseBlueprintModLoader::ApplyData(const nlohmann::json& data, RC::Unreal::UObject* object)
     {
-        auto objectClass = static_cast<UECustom::UBlueprintGeneratedClass*>(object->GetClassPrivate());
+        auto objectClass = object->GetClassPrivate();
+        if (!objectClass)
+        {
+            throw std::runtime_error("Cannot apply data, object class was null.");
+        }
+
+        UECustom::UBlueprintGeneratedClass* blueprintClass = nullptr;
+        if (objectClass->IsA(UECustom::UBlueprintGeneratedClass::StaticClass()))
+        {
+            blueprintClass = static_cast<UECustom::UBlueprintGeneratedClass*>(objectClass);
+        }
 
         for (auto& [propertyName, propertyValue] : data.items())
         {
@@ -245,8 +355,16 @@ namespace Windrose {
                 auto objectValue = *property->ContainerPtrToValuePtr<UObject*>(object);
                 if (!objectValue)
                 {
-                    // null Object means that this property could be a component template, so we should check if it has an associated GEN_VARIABLE.
-                    HandleInheritableComponent(objectClass, propertyNameWide, propertyValue);
+                    // null object can be a component template only on BlueprintGeneratedClass defaults.
+                    if (blueprintClass)
+                    {
+                        HandleInheritableComponent(blueprintClass, propertyNameWide, propertyValue);
+                    }
+                    else
+                    {
+                        PS::Log<LogLevel::Warning>(TEXT("Property '{}' in {} was null and couldn't be resolved as a blueprint component template.\n"),
+                            propertyNameWide, objectClass->GetNamePrivate().ToString());
+                    }
                 }
                 else
                 {

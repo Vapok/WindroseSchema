@@ -5,6 +5,7 @@
 #include "Unreal/NameTypes.hpp"
 #include "Unreal/UObjectArray.hpp"
 #include "safetyhook.hpp"
+#include <map>
 #include <unordered_map>
 
 namespace UECustom {
@@ -26,6 +27,11 @@ namespace Windrose {
     private:
         std::unordered_map<RC::Unreal::FName, std::vector<WindroseBlueprintMod>> m_modsMap;
 
+        // DataAssets not yet in memory at GameInstanceInit are queued here and
+        // drained on each PostInitializeComponents call until resolved.
+        std::map<RC::StringType, nlohmann::json> m_deferredDataAssetMods;
+        bool m_hasDeferredDataAssets = false;
+
         bool HookPostLoad();
         bool HookPostInitComponents();
 
@@ -38,6 +44,10 @@ namespace Windrose {
         std::vector<WindroseBlueprintMod>& GetModsForBlueprint(const RC::Unreal::FName& name);
 
         void ModifyObject(RC::Unreal::UObject* object);
+
+        // Drains m_deferredDataAssetMods: any path now resolvable via StaticFindObject
+        // gets patched and removed from the queue.
+        void ApplyDeferredDataAssets();
         
         void ApplyMod(const WindroseBlueprintMod& mod, RC::Unreal::UObject* object);
 
