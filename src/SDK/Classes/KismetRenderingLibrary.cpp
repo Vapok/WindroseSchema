@@ -1,6 +1,6 @@
 #include "SDK/Classes/KismetRenderingLibrary.h"
 #include "SDK/Classes/Custom/UObjectGlobals.h"
-#include "Unreal/UFunction.hpp"
+#include <Unreal/CoreUObject/UObject/Class.hpp>
 #include "Utility/Logging.h"
 
 using namespace RC;

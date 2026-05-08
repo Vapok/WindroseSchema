@@ -1,12 +1,12 @@
 #include "SDK/Structs/Custom/FManagedStruct.h"
 #include "Unreal/Core/HAL/UnrealMemory.hpp"
-#include "Unreal/UScriptStruct.hpp"
+#include <Unreal/CoreUObject/UObject/Class.hpp>
 #include "DynamicOutput/DynamicOutput.hpp"
 
 using namespace RC;
 using namespace RC::Unreal;
 
-namespace Palworld {
+namespace Windrose {
     FManagedStruct::FManagedStruct(UScriptStruct* Struct)
     {
         m_struct = Struct;

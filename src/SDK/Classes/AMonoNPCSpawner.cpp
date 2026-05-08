@@ -1,11 +1,11 @@
 #include "SDK/Classes/AMonoNPCSpawner.h"
-#include "Unreal/UFunction.hpp"
+#include <Unreal/CoreUObject/UObject/Class.hpp>
 #include "Unreal/UObjectGlobals.hpp"
 #include "Utility/Logging.h"
 
 using namespace RC::Unreal;
 
-namespace Palworld {
+namespace Windrose {
     int& AMonoNPCSpawner::GetLevel()
     {
         auto Value = this->GetValuePtrByPropertyNameInChain<int>(TEXT("Level"));
@@ -36,7 +36,7 @@ namespace Palworld {
 
         if (!Function)
         {
-            PS::Log<RC::LogLevel::Error>(STR("Failed to execute 'Spawn', could not find function /Game/Pal/Blueprint/Spawner/BP_MonoNPCSpawner.BP_MonoNPCSpawner_C:Spawn.\n"));
+            PS::Log<RC::LogLevel::Error>(STR("Failed to execute 'Spawn', could not find function /Game/Windrose/Blueprint/Spawner/BP_MonoNPCSpawner.BP_MonoNPCSpawner_C:Spawn.\n"));
             return;
         }
 

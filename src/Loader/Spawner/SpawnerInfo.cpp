@@ -34,10 +34,10 @@ namespace PS {
         }
 
         PS::JsonHelpers::ValidateFieldExists(value, "Weight");
-        PS::JsonHelpers::ValidateFieldExists(value, "PalList");
-        auto& palList = value.at("PalList");
+        PS::JsonHelpers::ValidateFieldExists(value, "WindroseList");
+        auto& windroseList = value.at("WindroseList");
 
-        PalSpawnGroupListInfo spawnGroupListInfo;
+        WindroseSpawnGroupListInfo spawnGroupListInfo;
         PS::JsonHelpers::ParseInteger(value, "Weight", spawnGroupListInfo.Weight);
 
         if (PS::JsonHelpers::FieldExists(value, "OnlyTime"))
@@ -47,14 +47,14 @@ namespace PS {
             spawnGroupListInfo.OnlyTime = GetOnlyTimeFromString(onlyTime);
         }
         
-        if (!palList.is_array())
+        if (!windroseList.is_array())
         {
-            throw std::runtime_error("PalList must be an array of objects.");
+            throw std::runtime_error("WindroseList must be an array of objects.");
         }
 
-        for (auto& palListItem : palList)
+        for (auto& windroseListItem : windroseList)
         {
-            spawnGroupListInfo.AddPalListInfo(palListItem);
+            spawnGroupListInfo.AddWindroseListInfo(windroseListItem);
         }
 
         SpawnGroupList.push_back(spawnGroupListInfo);

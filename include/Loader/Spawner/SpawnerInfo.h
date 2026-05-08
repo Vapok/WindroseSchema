@@ -4,7 +4,7 @@
 #include "Unreal/UnrealCoreStructs.hpp"
 #include "Unreal/Rotator.hpp"
 #include "SDK/Structs/Guid.h"
-#include "Loader/Spawner/PalSpawnGroupListInfo.h"
+#include "Loader/Spawner/WindroseSpawnGroupListInfo.h"
 #include "nlohmann/json_fwd.hpp"
 
 namespace RC::Unreal {
@@ -47,7 +47,7 @@ namespace PS {
 
         RC::Unreal::FName SpawnerName = RC::Unreal::NAME_None;
         RC::Unreal::uint8 SpawnerType = 0;
-        std::vector<PS::PalSpawnGroupListInfo> SpawnGroupList;
+        std::vector<PS::WindroseSpawnGroupListInfo> SpawnGroupList;
         bool bHasMapIcon = false;
 
         void Unload();

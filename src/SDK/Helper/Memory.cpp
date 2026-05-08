@@ -6,7 +6,7 @@
 using namespace RC;
 using namespace RC::Unreal;
 
-namespace Palworld {
+namespace Windrose {
     uintptr_t** GetVTablePtrByClassPath(const RC::StringType& classPath)
     {
         auto classObject = UECustom::UObjectGlobals::StaticFindObject<UClass*>(nullptr, nullptr, classPath.c_str(), false);

@@ -7,7 +7,7 @@ namespace RC::Unreal {
     class UDataTable;
 }
 
-namespace Palworld {
+namespace Windrose {
     class TableSerializer {
     public:
         TableSerializer(RC::Unreal::UDataTable* table);

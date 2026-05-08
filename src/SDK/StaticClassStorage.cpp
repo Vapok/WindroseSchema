@@ -5,10 +5,10 @@
 using namespace RC;
 using namespace RC::Unreal;
 
-namespace Palworld {
+namespace Windrose {
     void StaticClassStorage::Initialize()
     {
-        auto NameToFieldClassMap = Palworld::PropertyHelper::GetNameToFieldClassMap();
+        auto NameToFieldClassMap = Windrose::PropertyHelper::GetNameToFieldClassMap();
         for (auto& [TypeName, StaticClass] : *NameToFieldClassMap)
         {
             if (TypeName == FName(STR("ObjectProperty")))

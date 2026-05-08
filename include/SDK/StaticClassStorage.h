@@ -1,7 +1,7 @@
 #pragma once
 #include "Unreal/FField.hpp"
 
-namespace Palworld {
+namespace Windrose {
     class StaticClassStorage {
     public:
         static inline RC::Unreal::FFieldClass* EnumPropertyStaticClass;

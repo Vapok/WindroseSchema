@@ -1,5 +1,5 @@
 #include "SDK/Helper/BPGeneratedClassHelper.h"
-#include "SDK/PalSignatures.h"
+#include "SDK/WindroseSignatures.h"
 
 using namespace RC;
 using namespace RC::Unreal;
@@ -11,7 +11,7 @@ UObject* UECustom::BPGeneratedClassHelper::FindComponentTemplateByName(UObject* 
 
     if (!FunctionPtr)
     {
-        FunctionPtr = Palworld::SignatureManager::GetSignature("UBlueprintGeneratedClass::FindComponentTemplateByName");
+        FunctionPtr = Windrose::SignatureManager::GetSignature("UBlueprintGeneratedClass::FindComponentTemplateByName");
     }
 
     if (!FunctionPtr)
@@ -29,7 +29,7 @@ bool UECustom::BPGeneratedClassHelper::GetGeneratedClassesHierarchy(UClass* InCl
 
     if (!FunctionPtr)
     {
-        FunctionPtr = Palworld::SignatureManager::GetSignature("UBlueprintGeneratedClass::FindComponentTemplateByName");
+        FunctionPtr = Windrose::SignatureManager::GetSignature("UBlueprintGeneratedClass::FindComponentTemplateByName");
     }
 
     if (!FunctionPtr)

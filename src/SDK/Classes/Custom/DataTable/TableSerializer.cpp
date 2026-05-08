@@ -1,7 +1,7 @@
 #include "SDK/Classes/Custom/DataTable/TableSerializer.h"
 #include "Unreal/Engine/UDataTable.hpp"
 
-namespace Palworld {
+namespace Windrose {
     TableSerializer::TableSerializer(RC::Unreal::UDataTable* table) : m_table(table)
     {
 

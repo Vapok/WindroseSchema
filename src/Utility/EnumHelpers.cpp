@@ -1,7 +1,7 @@
 #include "Utility/EnumHelpers.h"
 #include "Utility/Logging.h"
 #include "Helpers/String.hpp"
-#include "Unreal/UEnum.hpp"
+#include <Unreal/CoreUObject/UObject/Class.hpp>
 
 using namespace RC;
 

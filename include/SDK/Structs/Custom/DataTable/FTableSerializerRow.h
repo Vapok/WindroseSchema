@@ -1,17 +1,15 @@
 #pragma once
 
 #include "Helpers/String.hpp"
-#include "Unreal/CoreUObject/UObject/Class.hpp"
 #include "Unreal/NameTypes.hpp"
-#include "Unreal/UScriptStruct.hpp"
-#include "Unreal/FProperty.hpp"
+#include <Unreal/CoreUObject/UObject/UnrealType.hpp>
 #include "SDK/Helper/PropertyHelper.h"
 
 namespace RC::Unreal {
     class UDataTable;
 }
 
-namespace Palworld {
+namespace Windrose {
     // When adding a row, the row is added to the table once this object destructs.
     // When editing a row, changes are applied to the table immediately.
     struct FTableSerializerRow {

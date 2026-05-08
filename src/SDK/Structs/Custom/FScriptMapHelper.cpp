@@ -1,5 +1,5 @@
 #include "SDK/Structs/Custom/FScriptMapHelper.h"
-#include "Unreal/FProperty.hpp"
+#include <Unreal/CoreUObject/UObject/UnrealType.hpp>
 
 using namespace RC;
 using namespace RC::Unreal;

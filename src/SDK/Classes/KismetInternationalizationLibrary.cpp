@@ -1,11 +1,11 @@
 #include "SDK/Classes/KismetInternationalizationLibrary.h"
 #include "SDK/Classes/Custom/UObjectGlobals.h"
-#include "Unreal/UFunction.hpp"
+#include <Unreal/CoreUObject/UObject/Class.hpp>
 
 using namespace RC;
 using namespace RC::Unreal;
 
-namespace Palworld {
+namespace Windrose {
 	FString UKismetInternationalizationLibrary::GetCurrentLanguage()
 	{
 		static auto Function = UECustom::UObjectGlobals::StaticFindObject<UFunction*>(nullptr, nullptr, TEXT("/Script/Engine.KismetInternationalizationLibrary:GetCurrentLanguage"));

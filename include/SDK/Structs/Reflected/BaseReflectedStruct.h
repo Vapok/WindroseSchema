@@ -1,8 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "Unreal/FProperty.hpp"
-#include "Unreal/UScriptStruct.hpp"
+#include <Unreal/CoreUObject/UObject/UnrealType.hpp>
 #include "Helpers/String.hpp"
 #include "SDK/Helper/PropertyHelper.h"
 #include "SDK/Structs/Custom/FScriptArrayHelper.h"
@@ -37,7 +36,7 @@ namespace UECustom {
         // This will return a nullptr if the property doesn't exist.
         RC::Unreal::FProperty* GetProperty(const RC::StringType& propertyName)
         {
-            auto property = Palworld::PropertyHelper::GetPropertyByName(m_scriptStruct, propertyName);
+            auto property = Windrose::PropertyHelper::GetPropertyByName(m_scriptStruct, propertyName);
             if (!property)
             {
                 return nullptr;
@@ -50,7 +49,7 @@ namespace UECustom {
         template <RC::Unreal::FFieldDerivative T>
         T* GetPropertyChecked(const RC::StringType& propertyName)
         {
-            auto property = Palworld::PropertyHelper::GetPropertyByName(m_scriptStruct, propertyName);
+            auto property = Windrose::PropertyHelper::GetPropertyByName(m_scriptStruct, propertyName);
             if (!property)
             {
                 throw std::runtime_error(RC::fmt("Property '%S' does not exist in struct '%S'.", propertyName.c_str(), 

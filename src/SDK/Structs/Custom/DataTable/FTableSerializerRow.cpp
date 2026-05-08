@@ -4,7 +4,7 @@
 using namespace RC;
 using namespace RC::Unreal;
 
-namespace Palworld {
+namespace Windrose {
     FTableSerializerRow::~FTableSerializerRow()
     {
         if (m_mode == ETableSerializeMode::Add)

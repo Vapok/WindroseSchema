@@ -25,3 +25,6 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 CMakeUserPresets.json
+.idea
+cmake-build-debug-visual-studio
+scratch_3.txt

@@ -4,7 +4,7 @@
 #include "SDK/Classes/Custom/UObjectWrapper.h"
 #include "SDK/Helper/PropertyHelper.h"
 
-using namespace Palworld;
+using namespace Windrose;
 
 namespace UECustom {
     UInheritableComponentHandler* UBlueprintGeneratedClass::GetInheritableComponentHandler()

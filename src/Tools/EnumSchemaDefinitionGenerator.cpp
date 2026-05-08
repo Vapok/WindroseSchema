@@ -1,5 +1,5 @@
 #include "Tools/EnumSchemaDefinitionGenerator.h"
-#include "Unreal/UEnum.hpp"
+#include <Unreal/CoreUObject/UObject/Class.hpp>
 #include "Unreal/UObjectGlobals.hpp"
 #include "nlohmann/json.hpp"
 #include <fstream>
@@ -7,7 +7,7 @@
 using namespace RC;
 using namespace RC::Unreal;
 
-namespace Palworld {
+namespace Windrose {
 	void EnumSchemaDefinitionGenerator::Generate()
 	{
         std::vector<UObject*> EnumObjects;
@@ -20,7 +20,7 @@ namespace Palworld {
             auto Enum = static_cast<UEnum*>(EnumObject);
             auto EnumName = RC::to_string(Enum->GetName());
 
-            if (!EnumName.starts_with("EPal"))
+            if (!EnumName.starts_with("EWindrose"))
             {
                 continue;
             }

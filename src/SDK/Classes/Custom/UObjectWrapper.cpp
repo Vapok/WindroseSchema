@@ -7,6 +7,6 @@ using namespace RC::Unreal;
 namespace UECustom {
     void* UObjectWrapper::GetValuePtrByPropertyNameInChain(const TCHAR* PropertyName)
     {
-        return Palworld::PropertyHelper::GetValuePtrByPropertyNameInChain(this, PropertyName);
+        return Windrose::PropertyHelper::GetValuePtrByPropertyNameInChain(this, PropertyName);
     }
 }

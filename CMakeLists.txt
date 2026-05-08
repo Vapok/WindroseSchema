@@ -4,15 +4,15 @@ set(CMAKE_CXX_STANDARD 23)
 
 add_subdirectory(deps)
 
-set(TARGET PalSchema)
+set(TARGET WindroseSchema)
 project(${TARGET})
 
 file(GLOB SRC_FILES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/src/dllmain.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/Loader/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/Loader/Blueprint/PalBlueprintMod.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/Loader/Spawner/PalListInfo.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/Loader/Spawner/PalSpawnGroupListInfo.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/Loader/Blueprint/WindroseBlueprintMod.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/Loader/Spawner/WindroseListInfo.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/Loader/Spawner/WindroseSpawnGroupListInfo.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/Loader/Spawner/SpawnerInfo.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/SDK/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/SDK/Classes/*.cpp"

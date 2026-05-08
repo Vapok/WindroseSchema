@@ -23,7 +23,7 @@ namespace RC::Unreal {
     class FMapProperty;
 }
 
-namespace Palworld::PropertyHelper {
+namespace Windrose::PropertyHelper {
     void CopyJsonValueToContainer(void* Container, RC::Unreal::FProperty* Property, const nlohmann::json& Value);
 
     RC::Unreal::int64 ParseEnumFromJsonValue(RC::Unreal::FEnumProperty* Property, const nlohmann::json& Value);
@@ -105,55 +105,55 @@ namespace Palworld::PropertyHelper {
     {
         if constexpr (std::is_same_v<FFieldDerivedType, RC::Unreal::FEnumProperty>)
         {
-            return IsPropertyA(Field, Palworld::StaticClassStorage::EnumPropertyStaticClass);
+            return IsPropertyA(Field, Windrose::StaticClassStorage::EnumPropertyStaticClass);
         }
         else if constexpr (std::is_same_v<FFieldDerivedType, RC::Unreal::FNumericProperty>)
         {
-            return IsPropertyA(Field, Palworld::StaticClassStorage::NumericPropertyStaticClass);
+            return IsPropertyA(Field, Windrose::StaticClassStorage::NumericPropertyStaticClass);
         }
         else if constexpr (std::is_same_v<FFieldDerivedType, RC::Unreal::FBoolProperty>)
         {
-            return IsPropertyA(Field, Palworld::StaticClassStorage::BoolPropertyStaticClass);
+            return IsPropertyA(Field, Windrose::StaticClassStorage::BoolPropertyStaticClass);
         }
         else if constexpr (std::is_same_v<FFieldDerivedType, RC::Unreal::FNameProperty>)
         {
-            return IsPropertyA(Field, Palworld::StaticClassStorage::NamePropertyStaticClass);
+            return IsPropertyA(Field, Windrose::StaticClassStorage::NamePropertyStaticClass);
         }
         else if constexpr (std::is_same_v<FFieldDerivedType, RC::Unreal::FStrProperty>)
         {
-            return IsPropertyA(Field, Palworld::StaticClassStorage::StrPropertyStaticClass);
+            return IsPropertyA(Field, Windrose::StaticClassStorage::StrPropertyStaticClass);
         }
         else if constexpr (std::is_same_v<FFieldDerivedType, RC::Unreal::FTextProperty>)
         {
-            return IsPropertyA(Field, Palworld::StaticClassStorage::TextPropertyStaticClass);
+            return IsPropertyA(Field, Windrose::StaticClassStorage::TextPropertyStaticClass);
         }
         else if constexpr (std::is_same_v<FFieldDerivedType, RC::Unreal::FClassProperty>)
         {
-            return IsPropertyA(Field, Palworld::StaticClassStorage::ClassPropertyStaticClass);
+            return IsPropertyA(Field, Windrose::StaticClassStorage::ClassPropertyStaticClass);
         }
         else if constexpr (std::is_same_v<FFieldDerivedType, RC::Unreal::FObjectProperty>)
         {
-            return IsPropertyA(Field, Palworld::StaticClassStorage::ObjectPropertyStaticClass);
+            return IsPropertyA(Field, Windrose::StaticClassStorage::ObjectPropertyStaticClass);
         }
         else if constexpr (std::is_same_v<FFieldDerivedType, RC::Unreal::FSoftClassProperty>)
         {
-            return IsPropertyA(Field, Palworld::StaticClassStorage::SoftClassPropertyStaticClass);
+            return IsPropertyA(Field, Windrose::StaticClassStorage::SoftClassPropertyStaticClass);
         }
         else if constexpr (std::is_same_v<FFieldDerivedType, RC::Unreal::FSoftObjectProperty>)
         {
-            return IsPropertyA(Field, Palworld::StaticClassStorage::SoftObjectPropertyStaticClass);
+            return IsPropertyA(Field, Windrose::StaticClassStorage::SoftObjectPropertyStaticClass);
         }
         else if constexpr (std::is_same_v<FFieldDerivedType, RC::Unreal::FStructProperty>)
         {
-            return IsPropertyA(Field, Palworld::StaticClassStorage::StructPropertyStaticClass);
+            return IsPropertyA(Field, Windrose::StaticClassStorage::StructPropertyStaticClass);
         }
         else if constexpr (std::is_same_v<FFieldDerivedType, RC::Unreal::FArrayProperty>)
         {
-            return IsPropertyA(Field, Palworld::StaticClassStorage::ArrayPropertyStaticClass);
+            return IsPropertyA(Field, Windrose::StaticClassStorage::ArrayPropertyStaticClass);
         }
         else if constexpr (std::is_same_v<FFieldDerivedType, RC::Unreal::FMapProperty>)
         {
-            return IsPropertyA(Field, Palworld::StaticClassStorage::MapPropertyStaticClass);
+            return IsPropertyA(Field, Windrose::StaticClassStorage::MapPropertyStaticClass);
         }
         
         return false;

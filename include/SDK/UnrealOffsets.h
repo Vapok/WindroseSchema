@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Palworld::UnrealOffsets {
+namespace Windrose::UnrealOffsets {
     void Initialize();
 
     void InitializeGMalloc();

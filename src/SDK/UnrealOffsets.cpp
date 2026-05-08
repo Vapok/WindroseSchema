@@ -1,27 +1,20 @@
 #include "SDK/UnrealOffsets.h"
-#include "SDK/PalSignatures.h"
+#include "SDK/WindroseSignatures.h"
 #include "UE4SSProgram.hpp"
 #include "Unreal/AActor.hpp"
 #include "Unreal/AGameMode.hpp"
 #include "Unreal/AGameModeBase.hpp"
 #include "Unreal/FArchive.hpp"
 #include "Unreal/FOutputDevice.hpp"
-#include "Unreal/FProperty.hpp"
-#include "Unreal/CoreUObject/UObject/Class.hpp"
-#include "Unreal/UEnum.hpp"
+#include <Unreal/CoreUObject/UObject/UnrealType.hpp>
 #include "Unreal/UGameViewportClient.hpp"
 #include "Unreal/UObject.hpp"
-#include "Unreal/UFunction.hpp"
-#include "Unreal/UField.hpp"
 #include "Unreal/UPlayer.hpp"
 #include "Unreal/ULocalPlayer.hpp"
-#include "Unreal/UStruct.hpp"
-#include "Unreal/UScriptStruct.hpp"
 #include "Unreal/Engine/UDataTable.hpp"
 #include "Unreal/World.hpp"
 #include "Unreal/Property/FEnumProperty.hpp"
 #include "Unreal/Property/FFieldPathProperty.hpp"
-#include "Unreal/CoreUObject/UObject/UnrealType.hpp"
 #include "Unreal/UnrealVersion.hpp"
 #include "Unreal/UnrealInitializer.hpp"
 #include "IniParser/Ini.hpp"
@@ -32,20 +25,20 @@ using namespace RC::Unreal;
 
 namespace fs = std::filesystem;
 
-void Palworld::UnrealOffsets::Initialize()
+void Windrose::UnrealOffsets::Initialize()
 {
-    // These are here so UE4SS can initialize a bit earlier to make sure PalSchema applies everything properly.
+    // These are here so UE4SS can initialize a bit earlier to make sure WindroseSchema applies everything properly.
     // This also prevents having to ship a custom build of UE4SS.
     Unreal::Version::Major = 5;
     Unreal::Version::Minor = 6;
 
     PS::Log<LogLevel::Verbose>(STR("Unreal Version set to {}.{}.\n"), Unreal::Version::Major, Unreal::Version::Minor);
 
-    auto FNameConstructorAddress = Palworld::SignatureManager::GetSignature("FName::Constructor");
+    auto FNameConstructorAddress = Windrose::SignatureManager::GetSignature("FName::Constructor");
     FName::ConstructorInternal.assign_address(FNameConstructorAddress);
     PS::Log<LogLevel::Verbose>(STR("FName::Constructor was assigned address of {}\n"), FNameConstructorAddress);
 
-    auto FNameToStringAddress = Palworld::SignatureManager::GetSignature("FName::ToString_Wchar");
+    auto FNameToStringAddress = Windrose::SignatureManager::GetSignature("FName::ToString_Wchar");
     FName::ToStringInternal.assign_address(FNameToStringAddress);
     PS::Log<LogLevel::Verbose>(STR("FName::ToString was assigned address of {}\n"), FNameToStringAddress);
 
@@ -53,13 +46,13 @@ void Palworld::UnrealOffsets::Initialize()
     PS::Log<LogLevel::Verbose>(STR("Versioned Container initialized.\n"));
 }
 
-void Palworld::UnrealOffsets::InitializeGMalloc()
+void Windrose::UnrealOffsets::InitializeGMalloc()
 {
     if (RC::Unreal::GMalloc) return;
 
     PS::Log<LogLevel::Verbose>(STR("Initializing GMalloc...\n"));
 
-    auto StartAddr = static_cast<uint8_t*>(Palworld::SignatureManager::GetSignature("FMemory::Free"));
+    auto StartAddr = static_cast<uint8_t*>(Windrose::SignatureManager::GetSignature("FMemory::Free"));
     if (!StartAddr)
     {
         throw std::runtime_error("Signature for FMemory::Free was invalid.");
@@ -123,7 +116,7 @@ void Palworld::UnrealOffsets::InitializeGMalloc()
     PS::Log<LogLevel::Verbose>(STR("Found GMalloc: {}\n"), static_cast<void*>(GMallocAddr));
 }
 
-void Palworld::UnrealOffsets::ApplyMemberVariableLayout()
+void Windrose::UnrealOffsets::ApplyMemberVariableLayout()
 {
     PS::Log<LogLevel::Verbose>(STR("Reading offsets from MemberVariableLayout.ini...\n"));
 

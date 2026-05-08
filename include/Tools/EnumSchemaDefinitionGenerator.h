@@ -1,5 +1,5 @@
 #pragma once
 
-namespace Palworld::EnumSchemaDefinitionGenerator {
+namespace Windrose::EnumSchemaDefinitionGenerator {
 	void Generate();
 }

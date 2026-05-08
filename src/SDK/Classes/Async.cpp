@@ -1,5 +1,5 @@
 #include "SDK/Classes/Async.h"
-#include "SDK/PalSignatures.h"
+#include "SDK/WindroseSignatures.h"
 
 namespace UECustom {
     void AsyncTask(ENamedThreads Thread, const RC::Unreal::TUniqueFunction<void()>& Function)
@@ -9,7 +9,7 @@ namespace UECustom {
 
         if (!FunctionPtr)
         {
-            FunctionPtr = Palworld::SignatureManager::GetSignature("AsyncTask");
+            FunctionPtr = Windrose::SignatureManager::GetSignature("AsyncTask");
         }
 
         if (!FunctionPtr)

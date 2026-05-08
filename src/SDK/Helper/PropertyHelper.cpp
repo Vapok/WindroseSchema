@@ -1,9 +1,7 @@
-#include "Unreal/FProperty.hpp"
-#include "Unreal/Property/FEnumProperty.hpp"
-#include "Unreal/Property/FStrProperty.hpp"
-#include "Unreal/Property/FTextProperty.hpp"
-#include "Unreal/CoreUObject/UObject/UnrealType.hpp"
-#include "Unreal/CoreUObject/UObject/Class.hpp"
+#include <Unreal/CoreUObject/UObject/UnrealType.hpp>
+#include <Unreal/CoreUObject/UObject/FStrProperty.hpp>
+#include <Unreal/Property/FEnumProperty.hpp>
+#include <Unreal/Property/FTextProperty.hpp>
 #include "Helpers/Casting.hpp"
 #include "SDK/Classes/TSoftObjectPtr.h"
 #include "SDK/Classes/TSoftClassPtr.h"
@@ -12,13 +10,13 @@
 #include "SDK/Structs/Custom/FScriptMapHelper.h"
 #include "SDK/Structs/Custom/FScriptArrayHelper.h"
 #include "SDK/Helper/PropertyHelper.h"
-#include "SDK/PalSignatures.h"
+#include "SDK/WindroseSignatures.h"
 #include "Utility/Logging.h"
 
 using namespace RC;
 using namespace RC::Unreal;
 
-namespace Palworld {
+namespace Windrose {
     void PropertyHelper::CopyJsonValueToContainer(void* Container, FProperty* Property, const nlohmann::json& Value)
     {
         auto PropertyName = Property->GetName();
@@ -272,7 +270,7 @@ namespace Palworld {
 
                 if (!ObjectValue_Property)
                 {
-                    ObjectValue_Property = Palworld::PropertyHelper::GetPropertyByName(ObjectValue->GetClassPrivate(), ObjectValue_PropertyName);
+                    ObjectValue_Property = Windrose::PropertyHelper::GetPropertyByName(ObjectValue->GetClassPrivate(), ObjectValue_PropertyName);
                 }
 
                 if (ObjectValue_Property)
@@ -310,8 +308,8 @@ namespace Palworld {
             // After:  "modname/resourcename"
             PackagePath = PackagePath.erase(0, resourcePrefix.length());
 
-            // "/Engine/Transient.PalSchema/Resources/modname/resourcename"
-            PackagePath = std::format(TEXT("/Engine/Transient.PalSchema/Resources/{}"), PackagePath);
+            // "/Engine/Transient.WindroseSchema/Resources/modname/resourcename"
+            PackagePath = std::format(TEXT("/Engine/Transient.WindroseSchema/Resources/{}"), PackagePath);
         }
 
         auto SoftObjectPtr = UECustom::TSoftObjectPtr<UObject>(UECustom::FSoftObjectPath(PackagePath));
@@ -592,7 +590,7 @@ namespace Palworld {
         if (!GetNameToFieldClassMap_Internal)
         {
             GetNameToFieldClassMap_Internal = reinterpret_cast<GetNameToFieldClassMap_Signature>(
-                Palworld::SignatureManager::GetSignature("FFieldClass::GetNameToFieldClassMap")
+                Windrose::SignatureManager::GetSignature("FFieldClass::GetNameToFieldClassMap")
             );
         }
 
@@ -613,7 +611,7 @@ namespace Palworld {
         if (!IsA_Internal)
         {
             IsA_Internal = reinterpret_cast<IsA_Signature>(
-                Palworld::SignatureManager::GetSignature("FField::IsA")
+                Windrose::SignatureManager::GetSignature("FField::IsA")
             );
         }
 

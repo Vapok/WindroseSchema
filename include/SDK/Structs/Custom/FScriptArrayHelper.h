@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Unreal/Property/FArrayProperty.hpp"
+#include <Unreal/CoreUObject/UObject/UnrealType.hpp>
 #include "SDK/Structs/Custom/FManagedValue.h"
 
 namespace UECustom {

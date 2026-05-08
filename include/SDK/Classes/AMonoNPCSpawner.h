@@ -2,7 +2,7 @@
 
 #include "Unreal/AActor.hpp"
 
-namespace Palworld {
+namespace Windrose {
     class AMonoNPCSpawner : public RC::Unreal::AActor {
     public:
         int& GetLevel();

@@ -1,5 +1,5 @@
 #include "SDK/Classes/Custom/UObjectGlobals.h"
-#include "SDK/PalSignatures.h"
+#include "SDK/WindroseSignatures.h"
 #include "Utility/Logging.h"
 
 using namespace RC;
@@ -14,7 +14,7 @@ namespace UECustom {
         if (!StaticFindObject_Internal)
         {
             StaticFindObject_Internal = reinterpret_cast<StaticFindObject_Signature>(
-                Palworld::SignatureManager::GetSignature("UObjectGlobals::StaticFindObject")
+                Windrose::SignatureManager::GetSignature("UObjectGlobals::StaticFindObject")
             );
         }
 
@@ -36,7 +36,7 @@ namespace UECustom {
         if (!GetObjectsOfClass_Internal)
         {
             GetObjectsOfClass_Internal = reinterpret_cast<GetObjectsOfClass_Signature>(
-                Palworld::SignatureManager::GetSignature("GetObjectsOfClass")
+                Windrose::SignatureManager::GetSignature("GetObjectsOfClass")
             );
         }
 

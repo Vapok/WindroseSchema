@@ -1,9 +1,9 @@
 #include "Mod/CppUserModBase.hpp"
 #include "UE4SSProgram.hpp"
-#include "Loader/PalMainLoader.h"
+#include "Loader/WindroseMainLoader.h"
 #include "Utility/Config.h"
 #include "Utility/Logging.h"
-#include "SDK/PalSignatures.h"
+#include "SDK/WindroseSignatures.h"
 #include "SDK/Classes/Async.h"
 #include "SDK/UnrealOffsets.h"
 #include "../version.h"
@@ -11,34 +11,34 @@
 using namespace RC;
 using namespace RC::Unreal;
 
-class PalSchema : public RC::CppUserModBase
+class WindroseSchema : public RC::CppUserModBase
 {
 public:
-    PalSchema() : CppUserModBase()
+    WindroseSchema() : CppUserModBase()
     {
         auto Version = std::format(STR("{}.{}.{}"), VERSION_MAJOR, VERSION_MINOR, VERSION_REVISION);
 
-        ModName = STR("PalSchema");
+        ModName = STR("WindroseSchema");
         ModVersion = Version;
-        ModDescription = STR("Allows modifying of Palworld's assets dynamically.");
+        ModDescription = STR("Allows modifying of Windrose's assets dynamically.");
         ModAuthors = STR("Okaetsu");
 
         auto config = PS::PSConfig::Get();
         config->Load();
 
         PS::Log<LogLevel::Verbose>(STR("Initializing SignatureManager...\n"));
-        Palworld::SignatureManager::Initialize();
+        Windrose::SignatureManager::Initialize();
 
         PS::Log<LogLevel::Verbose>(STR("Initializing UnrealOffsets...\n"));
-        Palworld::UnrealOffsets::Initialize();
+        Windrose::UnrealOffsets::Initialize();
 
-        PS::Log<LogLevel::Verbose>(STR("Preparing to pre-initialize PalSchema...\n"));
+        PS::Log<LogLevel::Verbose>(STR("Preparing to pre-initialize WindroseSchema...\n"));
         MainLoader.PreInitialize();
 
         PS::Log<RC::LogLevel::Normal>(STR("{} v{} by {} loaded.\n"), ModName, ModVersion, ModAuthors);
     }
 
-    ~PalSchema() override
+    ~WindroseSchema() override
     {
     }
 
@@ -49,20 +49,20 @@ public:
             return;
         }
 
-        PS::Log<LogLevel::Verbose>(STR("GUI Console is enabled, enabling ImGui for PalSchema...\n"));
+        PS::Log<LogLevel::Verbose>(STR("GUI Console is enabled, enabling ImGui for WindroseSchema...\n"));
 
         UE4SS_ENABLE_IMGUI()
 
-        PS::Log<LogLevel::Verbose>(STR("Registering Pal Schema tab in GUI Console...\n"));
-        register_tab(STR("Pal Schema"), [](CppUserModBase* instance) {
-            auto mod = dynamic_cast<PalSchema*>(instance);
+        PS::Log<LogLevel::Verbose>(STR("Registering Windrose Schema tab in GUI Console...\n"));
+        register_tab(STR("Windrose Schema"), [](CppUserModBase* instance) {
+            auto mod = dynamic_cast<WindroseSchema*>(instance);
             if (!mod)
             {
                 return;
             }
         });
 
-        PS::Log<LogLevel::Verbose>(STR("Finished registering Pal Schema tab for GUI Console.\n"));
+        PS::Log<LogLevel::Verbose>(STR("Finished registering Windrose Schema tab for GUI Console.\n"));
     }
 
     auto on_update() -> void override
@@ -78,19 +78,19 @@ public:
         MainLoader.Initialize();
     }
 private:
-    Palworld::PalMainLoader MainLoader;
+    Windrose::WindroseMainLoader MainLoader;
 };
 
 
-#define PALSCHEMA_API __declspec(dllexport)
+#define WINDROSESCHEMA_API __declspec(dllexport)
 extern "C"
 {
-    PALSCHEMA_API RC::CppUserModBase* start_mod()
+    WINDROSESCHEMA_API RC::CppUserModBase* start_mod()
     {
-        return new PalSchema();
+        return new WindroseSchema();
     }
 
-    PALSCHEMA_API void uninstall_mod(RC::CppUserModBase* mod)
+    WINDROSESCHEMA_API void uninstall_mod(RC::CppUserModBase* mod)
     {
         delete mod;
     }
