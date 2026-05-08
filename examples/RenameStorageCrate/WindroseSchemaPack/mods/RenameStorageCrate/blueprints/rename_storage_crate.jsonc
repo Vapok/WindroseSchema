@@ -1,7 +1,7 @@
 // WindroseSchema blueprints mod — patches the FText Name property on the
 // DA_BI_Utilities_Storage_StickBasket R5BuildingItem DataAsset.
 //
-// The top-level key is the /Game/ asset path (no _C suffix — DataAssets have none).
+// The top-level key is the /Game/ asset path.
 // "Name" matches the UPROPERTY FText Name on UR5BuildingItem.
 {
   "/Game/Gameplay/Building/BuildingUtilities/DA_BI_Utilities_Storage_StickBasket": {
