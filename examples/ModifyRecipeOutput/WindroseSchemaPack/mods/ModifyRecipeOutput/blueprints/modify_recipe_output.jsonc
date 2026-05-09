@@ -1,0 +1,35 @@
+// WindroseSchema blueprints mod — patches a R5BLRecipeData asset.
+//
+// R5BLRecipeData is a UPrimaryDataAsset (base: R5JsonRuntimePDA) stored under
+// the /R5BusinessRules/ mount point. These assets are NOT in memory at
+// GameInstanceInit, so WindroseSchema queues the patch and applies it once the
+// first actor fires PostInitializeComponents.
+//
+// HOW TO FIND THE RECIPE ASSET PATH:
+//   1. Open FModel with the game's IoStore paks + Mappings.usmap.
+//   2. Search for the recipe you want (e.g. by RecipeTag or result item name).
+//   3. Note the full package path shown by FModel (e.g.
+//      /R5BusinessRules/Recipes/Ammo/DA_RD_Ammo_FirearmProjectile_FineMetal_T02).
+//   4. Replace the top-level key below with that path.
+//
+// PROPERTY NOTES (from UR5BLRecipeData UHT):
+//   RecipeCost    TArray<FR5BLRecipeItem>  — ingredient list
+//   RecipeResult  TArray<FR5BLRecipeItem>  — output item list
+//
+// FR5BLRecipeItem fields:
+//   Item   TSoftObjectPtr<UR5BLInventoryItem>  — full Package.ObjectName path
+//   Count  int32
+//
+// Supplying a plain JSON array replaces the entire array (Clear + add).
+// Use {"Action":"Clear","Items":[...]} if you need explicit control.
+
+{
+  "/R5BusinessRules/Recipes/Ammo/DA_RD_Ammo_FirearmProjectile_FineMetal_T02": {
+    "RecipeResult": [
+      {
+        "Item": "/R5BusinessRules/InventoryItems/Ammo/DA_AID_Ammo_FirearmProjectile_FineMetal_T02.DA_AID_Ammo_FirearmProjectile_FineMetal_T02",
+        "Count": 50
+      }
+    ]
+  }
+}

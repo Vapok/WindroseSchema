@@ -143,6 +143,8 @@ Updating the mod for a new build usually means **refreshing patterns and vtable 
 - **`include/Utility/Logging.h`** / **`PS::Log`**: Thin logging wrapper over UE4SS log levels.  
 - **`SDK/Helper/PropertyHelper`**: Bridges JSON values into `FProperty` data on UObject/UClass/table rows.
 
+> **Important:** `PropertyHelper::GetNextField` reads `FField::Next` at offset `0x20`, but this game build (UE5 5.6.1-0) has `Next` at `0x18`. Any code that walks the property linked list via `GetNextField` will crash after the first field. Use `PropertyHelper::GetPropertyByName(UScriptStruct*, name)` to look up fields by name instead. See **`PROPERTY_ACCESS_GUIDE.md`** for the full analysis, safe patterns, and verified memory layouts.
+
 ---
 
 ## Building (summary)

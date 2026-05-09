@@ -25,6 +25,7 @@
 #include "Loader/WindroseRawTableLoader.h"
 #include "Loader/WindroseBlueprintModLoader.h"
 #include "Loader/WindroseEnumLoader.h"
+#include "Loader/WindroseRecipeModLoader.h"
 #include "Loader/WindroseHelpGuideModLoader.h"
 #include "Loader/WindroseSpawnLoader.h"
 #include "Loader/WindroseMainLoader.h"
@@ -193,6 +194,9 @@ namespace Windrose {
 
         auto blueprintModLoader = std::make_unique<WindroseBlueprintModLoader>();
         RegisterLoader(std::move(blueprintModLoader));
+
+        auto recipeModLoader = std::make_unique<WindroseRecipeModLoader>();
+        RegisterLoader(std::move(recipeModLoader));
     }
 
     void WindroseMainLoader::SetupAutoReload()

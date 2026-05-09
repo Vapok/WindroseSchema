@@ -138,7 +138,9 @@ namespace Windrose {
         for (auto& [assetName, assetData] : data.items())
         {
             auto assetNameWide = RC::to_generic_string(assetName);
-            if (!assetNameWide.starts_with(TEXT("/Game/")))
+            // Any key starting with '/' is a full content path (/Game/..., /R5BusinessRules/..., etc.)
+            // and must be handled by LoadUnsafe. Only short FName keys (e.g. BP_Foo_C) go here.
+            if (!assetNameWide.starts_with(TEXT("/")))
             {
                 auto assetFName = FName(assetNameWide, FNAME_Add);
                 auto newMod = WindroseBlueprintMod(assetFName, assetData);
@@ -166,7 +168,8 @@ namespace Windrose {
         {
             auto originalAssetPath = RC::to_generic_string(assetName);
             auto assetNameWide = originalAssetPath;
-            if (assetNameWide.starts_with(TEXT("/Game/")))
+            // Handle any full content path: /Game/..., /R5BusinessRules/..., /Engine/..., etc.
+            if (assetNameWide.starts_with(TEXT("/")))
             {
                 // Construct the full object path (Package.ObjectName) so StaticFindObject
                 // resolves the DataAsset export, not just the UPackage container.

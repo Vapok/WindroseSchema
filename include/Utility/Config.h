@@ -10,6 +10,7 @@ namespace PS {
         std::string languageOverride = "";
         bool enableAutoReload = false;
         bool enableDebugLogging = false;
+        bool enableRecipeDump = true;
     };
 
     class PSConfig {
@@ -21,6 +22,8 @@ namespace PS {
         bool IsAutoReloadEnabled();
 
         bool IsDebugLoggingEnabled();
+
+        bool IsRecipeDumpEnabled();
 
         void Load();
     private:

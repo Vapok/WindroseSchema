@@ -38,6 +38,12 @@ namespace PS {
         return config ? config->m_settings.enableDebugLogging : false;
     }
 
+    bool PSConfig::IsRecipeDumpEnabled()
+    {
+        auto config = Get();
+        return config ? config->m_settings.enableRecipeDump : true;
+    }
+
     void PSConfig::Load()
     {
         auto folderPath = GetConfigPath();
